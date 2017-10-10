@@ -32,7 +32,7 @@ ds <- density(crimePPP)
 plot(ds, main='gęstość przestępstw')
 kCrime <- Kest(crimePPP)
 
-png('../plot/k_function_ALL.png', width=2500, height=3000, res=300)
+png('../plot/k_function/k_function_ALL.png', width=2500, height=3000, res=300)
 plot(kCrime, main="funkcja K dla całego Białegostoku")
 dev.off()
 
@@ -41,7 +41,7 @@ kFunctionForCategory <- function(categoryName) {
   pts <- coordinates(crimeBialystok[crimeBialystok$KAT == categoryName, ])
   p <- ppp(pts[,1], pts[,2], window=onlyBialystokOwin)
   k <- Kest(p)
-  filename <- paste('../plot/k_function', categoryName, sep='_')
+  filename <- paste('../plot/k_function/k_function', categoryName, sep='_')
   filename <- paste(filename, 'png', sep='.')
   png(filename = filename, width=2500, height=3000, res=300)
   plot(k, main=categoryName)  
@@ -70,7 +70,7 @@ kFunctionWithEvaluateForCategory <- function(categoryName, nsim = 5, count = 100
   pts <- pts[sample(nrow(pts), count), ]
   pppInner <- ppp(pts[,1], pts[,2], window=onlyBialystokOwin)
   keInner <- envelope(pppInner, Kest, nsim = nsim)
-  filename <- paste('../plot/k_function_evaluate', categoryName, sep='_')
+  filename <- paste('../plot/k_function/k_function_evaluate', categoryName, sep='_')
   filename <- paste(filename, 'png', sep='.')
   png(filename = filename, width=2500, height=3000, res=300)
   plot(keInner, main=categoryName)  

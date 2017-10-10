@@ -79,3 +79,45 @@ sumByCategory <- function(x) {
 crimeInCategories <- sapply(categoryNames, sumByCategory)
 crimeInCategories <- data.frame(NAME=categoryNames, crimeInCategories)
 ####
+
+
+
+#### duplicates
+crime <- read.csv("../../data/Polska/zdarzenia_rsow.csv", sep = "|")
+crime <- crime[!is.na(crime$LAT)&!is.na(crime$LNG), ]
+
+# zmiana z , na . w danych (inaczej traktowane są jako string)
+crime$LAT <- as.numeric(gsub(",", ".", gsub("\\.", "", crime[["LAT"]])))
+crime$LNG <- as.numeric(gsub(",", ".", gsub("\\.", "", crime[["LNG"]])))
+
+drops <- c("ID")
+test <- crime[ , !(names(crime) %in% drops)]
+test1 <- test[duplicated(test), ]
+sum(duplicated(test))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
