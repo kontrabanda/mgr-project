@@ -82,8 +82,8 @@ png('../plot/metadata/bournemouth/bournemouth_osiedla_dotchart.png', width=2500,
 dotchart(tail(sort(sumOfCrimesBySettlementName), 10), cex=0.65)
 dev.off()
 
-sumOfCrimesBySettlementName1 <- data.frame(jpt_nazwa_=names(sumOfCrimesBySettlementName), sumOfCrimesBySettlementName)
-settlementsWithSumOfCrimes <- merge(settlements, sumOfCrimesBySettlementName1, by='jpt_nazwa_')
+sumOfCrimesBySettlementName1 <- data.frame(name=names(sumOfCrimesBySettlementName), sumOfCrimesBySettlementName)
+settlementsWithSumOfCrimes <- merge(settlements, sumOfCrimesBySettlementName1, by='name')
 
 my.palette <- brewer.pal(n = 9, name = "YlOrBr")
 
