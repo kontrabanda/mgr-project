@@ -44,7 +44,7 @@ png('../plot/k_function/Bournemouth/k_function_ALL.png', width=2500, height=3000
 plot(kCrime, main="funkcja K dla całego Bounemouth")
 dev.off()
 
-# wyciągnięcie losowych 2000 pktów
+# wyciągnięcie losowych 1000 pktów
 set.seed(12)
 pts <- crimePts[sample(nrow(crimePts), 1000), ]
 pppRandom <- ppp(pts[,1], pts[,2], window=onlyBournemouthOwin)
