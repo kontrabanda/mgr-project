@@ -79,4 +79,3 @@ KDEForCategory <- function(categoryName) {
 categoryNames <- unique(crimeBournemouthDF$Crime.type)
 sapply(categoryNames, KDEForCategory)
 ###
-
