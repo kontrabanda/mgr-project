@@ -1,4 +1,4 @@
 .Rhistory
 plot/*
 crime-type-classification/temp/
-crime-type-classification/logistic-regression/results
+crime-type-classification/logistic-regression/results/
