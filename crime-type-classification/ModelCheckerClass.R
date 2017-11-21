@@ -9,7 +9,6 @@ ModelCheckerClass <- setRefClass(
   ),
   methods = list(
     init = function(crimeDataClass, classificationModel) {
-      crimeDataClass$init()
       data <<- crimeDataClass$getData()
       classificationModel <<- classificationModel
     },

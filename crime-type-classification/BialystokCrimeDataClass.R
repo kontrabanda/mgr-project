@@ -26,6 +26,9 @@ BialystokCrimeDataClass <- setRefClass(
       data <- rawData[, c("lat", "lng", "date")]
       data$label <- ifelse(rawData$category==categoryName, 1, 0)
       data
+    },
+    getCategoriesNames = function() {
+      unique(rawData$category)
     }
   ),
   contains=c("DataClass")
