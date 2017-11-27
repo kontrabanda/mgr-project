@@ -1,17 +1,70 @@
 source(file="BialystokCrimeDataClass.R")
-source(file="LogisticRegressionModelClass.R")
 source(file="ModelCheckerClass.R")
 source(file="RatingClass.R")
+source(file="TimeLoggingClass.R")
 
+withTraining <- T
+timeLoggingClass <- TimeLoggingClass()
 bialystokCrimeDataClass <- BialystokCrimeDataClass()
-bialystokCrimeDataClass$init()
-logisticRegressionModelClass <- LogisticRegressionModelClass()
-modelChekcerClass <- ModelCheckerClass()
-modelChekcerClass$init(bialystokCrimeDataClass, logisticRegressionModelClass)
-#results <- modelChekcerClass$normalChecking()
-results <- modelChekcerClass$crossValidation()
+
+#################### LOGISTIC REGRESSION  ###########################
+timeLoggingClass$start()
+source(file="LogisticRegressionModelClass.R")
+modelChekcerClass <- ModelCheckerClass(bialystokCrimeDataClass, LogisticRegressionModelClass, 'logicRegression', withTraining = withTraining)
+results1 <- modelChekcerClass$crossValidation()
+
+ratingClass <- RatingClass(bialystokCrimeDataClass)
+auc1 <- ratingClass$getAvreageAUC(results1)
+timeLoggingClass$stop()
+###############################################
+
+################### BAYES  ############################
+timeLoggingClass$start()
+source(file="NaiveBayesModelClass.R")
+modelChekcerClass <- ModelCheckerClass(bialystokCrimeDataClass, NaiveBayesModelClass, 'naiveBayes', withTraining = withTraining)
+results2 <- modelChekcerClass$crossValidation()
+
+ratingClass <- RatingClass(bialystokCrimeDataClass)
+auc2 <- ratingClass$getAvreageAUC(results2)
+timeLoggingClass$stop()
+###############################################
+library(e1071)
+data <- bialystokCrimeDataClass$getData()
+train <- data[1:3500, ]
+test <- data[3500:8000, c("lng", "lat", "date")]
+
+model1 <- svm(label~., train, probability = TRUE)
+pred <- predict(model1, test, probability = TRUE)
+attr(pred, "prob")[1:10,]
+
+rpusvm(x, y, type="eps-regression", scale=FALSE)
+
+train <- data
+test <- data[10000:20000,]
+
+# strasznie wolny!!!!!!!!!! nie doszedłem do końca
+start.time <- Sys.time()
+model1 <- svm(label~., train, probability = TRUE)
+end.time <- Sys.time()
+time.taken <- end.time - start.time
+time.taken
 
 
-ratingClass <- RatingClass()
-ratingClass$init(bialystokCrimeDataClass)
-auc <- ratingClass$getAvreageAUC(results)
+# zdecydowanie lepiej jeżeli chodzi o uczenie (ale trzeba sprawdzić jego jakość)
+library(parallelSVM)
+start.time <- Sys.time()
+model2 <- parallelSVM(label~., train, probability = TRUE)
+end.time <- Sys.time()
+time.taken <- end.time - start.time
+time.taken
+
+pred <- predict(model2, test, probability = TRUE)
+attr(pred, "prob")[1:10,]
+
+beep()
+
+data
+write.table(data)
+
+dir.create('./temp/bialystok/1')
+dir.create('./temp/bialystok')

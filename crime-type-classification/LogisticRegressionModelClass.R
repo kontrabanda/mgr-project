@@ -3,14 +3,19 @@ source(file="ClassificationModelClass.R")
 LogisticRegressionModelClass <- setRefClass(
   Class="LogisticRegressionModelClass",
   fields=list(
-    models="data.frame"
+    models="data.frame",
+    modelFile="character",
+    categories="factor"
   ),
   methods = list(
+    initialize = function(path = './temp', categories = NULL) {
+      categories <<- categories
+      modelFile <<- path
+      models <<- createModelsDF(categories)
+    },
     trainModel = function(data) {
-      labels <- unique(data$label)
-      models <<- createModelsDF(labels)
-      for(label in labels) {
-        createSingleCategoryModel(label, data)
+      for(category in categories) {
+        createSingleCategoryModel(category, data)
       }
     },
     createSingleCategoryModel = function(label, data) {
@@ -25,7 +30,9 @@ LogisticRegressionModelClass <- setRefClass(
       colnames(modelsL) <- c("filename")
       rownames(modelsL) <- labels
       for (label in labels) {
-        modelsL[label, "filename"] <- paste("./temp/LogisticRegressionModelClass_model_", label, ".RData", sep="")
+        path <- paste("LogisticRegressionModelClass_model_", label, ".RData", sep="")
+        path <- paste(modelFile, path, sep = "/")
+        modelsL[label, "filename"] <- path
       }
       modelsL
     },

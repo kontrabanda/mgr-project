@@ -7,7 +7,7 @@ RatingClass <- setRefClass(
     dataClass="DataClass"
   ),
   methods = list(
-    init = function(dataClassInput) {
+    initialize = function(dataClassInput) {
       dataClass <<- dataClassInput
     },
     getAvreageAUC = function(results) {

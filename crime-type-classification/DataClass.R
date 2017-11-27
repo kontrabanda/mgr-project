@@ -1,7 +1,8 @@
 DataClass <- setRefClass(
   Class="DataClass",
   fields=list(
-    rawData="data.frame"
+    rawData="data.frame",
+    name='character'
   ),
   methods = list(
     init = function() {

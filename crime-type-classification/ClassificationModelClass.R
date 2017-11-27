@@ -1,13 +1,10 @@
 ClassificationModelClass <- setRefClass(
   Class="ClassificationModelClass",
   methods = list(
-    init = function() {
-      print("ClassificationModelClass: init")
-    },
-    trainModel = function(data) {
+    trainModel = function(data, name) {
       print("ClassificationModelClass: trainModel")
     },
-    predictLabels = function(test) {
+    predictLabels = function(test, name) {
       print("ClassificationModelClass: predictLabels")
     }
   )
