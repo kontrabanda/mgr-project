@@ -45,8 +45,10 @@ ModelCheckerClass <- setRefClass(
         
         classificationModel <- ClassificationModel(iterationPath, categories)  
         if(withTraining) {
+          cat(sprintf('Training %s iteration. Start time: %s \n', i, format(Sys.time(),usetz = TRUE)))
           classificationModel$trainModel(train)
         }
+        cat(sprintf('Testing %s iteration. Start time: %s \n', i, format(Sys.time(),usetz = TRUE)))
         testWithoutLabels <- test[, -which(names(test) == "label")]
         results <- rbind(results ,classificationModel$predictLabels(testWithoutLabels))
       }

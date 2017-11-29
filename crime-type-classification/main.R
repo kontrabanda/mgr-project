@@ -52,19 +52,36 @@ time.taken
 
 # zdecydowanie lepiej jeżeli chodzi o uczenie (ale trzeba sprawdzić jego jakość)
 library(parallelSVM)
+source(file="SVMModelClass.R")
 start.time <- Sys.time()
 model2 <- parallelSVM(label~., train, probability = TRUE)
 end.time <- Sys.time()
 time.taken <- end.time - start.time
 time.taken
 
+
+
 pred <- predict(model2, test, probability = TRUE)
-attr(pred, "prob")[1:10,]
+attr(pred, "prob")
+##################### SVM ###########################
+source(file="SVMModelClass.R")
+timeLoggingClass$start()
+modelChekcerClass <- ModelCheckerClass(bialystokCrimeDataClass, SVMModelClass, 'svmModelClass', withTraining = withTraining)
+results3 <- modelChekcerClass$crossValidation()
 
-beep()
+ratingClass <- RatingClass(bialystokCrimeDataClass)
+auc3 <- ratingClass$getAvreageAUC(results3)
+timeLoggingClass$stop()
+######################################################
 
-data
-write.table(data)
+data <- bialystokCrimeDataClass$getData()
+svmModel <- SVMModelClass()
 
-dir.create('./temp/bialystok/1')
-dir.create('./temp/bialystok')
+svmModel$trainModel(data)
+timeLoggingClass$start()
+svmModel$predictLabels(data[, 1:3])
+timeLoggingClass$stop()
+
+model <- parallelSVM(label~., data, probability = TRUE)
+timeLoggingClass$stop()
+
