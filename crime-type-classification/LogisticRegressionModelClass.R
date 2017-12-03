@@ -3,6 +3,7 @@ source(file="ClassificationModelClass.R")
 LogisticRegressionModelClass <- setRefClass(
   Class="LogisticRegressionModelClass",
   fields=list(
+    modelName="character",
     models="data.frame",
     modelFile="character",
     categories="factor"
@@ -12,6 +13,7 @@ LogisticRegressionModelClass <- setRefClass(
       categories <<- categories
       modelFile <<- path
       models <<- createModelsDF(categories)
+      modelName <<- 'logicRegression'
     },
     trainModel = function(data) {
       for(category in categories) {

@@ -3,16 +3,16 @@ source(file="ClassificationModelClass.R")
 source(file="DataClass.R")
 source(file="TimeLoggingClass.R")
 
-ModelCheckerClass <- setRefClass(
-  Class="ModelCheckerClass",
+CheckerWithResultSaving <- setRefClass(
+  Class="CheckerWithResultSaving",
   fields=list(
     ClassificationModel="refObjectGenerator",
     crimeDataClass="DataClass",
+    resultsPath="character",
     modelPath="character",
     modelName="character",
     folds="integer",
     foldsCount="numeric",
-    results="data.frame",
     data="data.frame"
   ),
   methods = list(
@@ -23,6 +23,7 @@ ModelCheckerClass <- setRefClass(
       classificationModel <- ClassificationModel()
       modelName <<- classificationModel$modelName
       modelPath <<- createModelPath()
+      resultsPath <<- createResultsPath()
       data <<- crimeDataClass$getData()
       setFolds(10)
     },
@@ -30,44 +31,46 @@ ModelCheckerClass <- setRefClass(
       foldsCount <<- k
       folds <<- createFolds(factor(data$label), k = k, list = FALSE)
     },
-    setResults = function() {
-      categories <- crimeDataClass$getCategoriesNames()
-      results <<- data.frame(matrix(NA, nrow = 0, ncol = length(categories)))
-      colnames(results) <<- categories
-    },
-    crossValidation = function(trainingSet = 1:foldsCount, testSet = 1:foldsCount) {
-      training(trainingSet)
-      testing(testSet)
+    crossValidation = function(sets = 1:foldsCount) {
+      for(i in sets) {
+        trainingSingle(i)
+        testingSingle(i)
+      }
+      
+      results <- getResults(sets)
       results
     },
-    training = function(trainingSet) {
-      for(i in trainingSet) {
-        timeLoggingClass$start()
-        trainingSingle(i)
-        timeLoggingClass$stop()
+    getResults = function(sets = 1:foldsCount) {
+      categories <- crimeDataClass$getCategoriesNames()
+      results <- data.frame(matrix(NA, nrow = 0, ncol = length(categories)))
+      for(i in sets) {
+        results <- rbind(results, getSingleResult(i))
       }
+      results
+    },
+    getSingleResult = function(i) {
+      result <- read.csv(getIterationResultsPath(i))
+      result
     },
     trainingSingle = function(i) {
+      timeLoggingClass$start()
       cat(sprintf('Training %s iteration. Start time: %s \n', i, format(Sys.time(),usetz = TRUE)))
-      iterationPath <- createIterationPath(i)
+      iterationPath <- createIterationModelPath(i)
       train <- data[folds != i, ]
       classificationModel <- ClassificationModel(iterationPath, crimeDataClass$getCategoriesNames())  
       classificationModel$trainModel(train)
-    },
-    testing = function(testSet) {
-      for(i in testSet) {
-        timeLoggingClass$start()
-        testingSingle(i)
-        timeLoggingClass$stop()
-      }
+      timeLoggingClass$stop()
     },
     testingSingle = function(i) {
+      timeLoggingClass$start()
       cat(sprintf('Testing %s iteration. Start time: %s \n', i, format(Sys.time(),usetz = TRUE)))
-      iterationPath <- getIterationPath(i)
+      iterationPath <- getIterationModelPath(i)
       test <- data[folds == i, ]
       testWithoutLabels <- test[, -which(names(test) == "label")]
       classificationModel <- ClassificationModel(iterationPath, crimeDataClass$getCategoriesNames())  
-      results <<- rbind(results, classificationModel$predictLabels(testWithoutLabels))
+      results <- classificationModel$predictLabels(testWithoutLabels)
+      write.csv(results, file = getIterationResultsPath(i))
+      timeLoggingClass$stop()
     },
     getDataWithoutLabels = function(data) {
       data[, -which(names(data) == "label")]
@@ -80,13 +83,26 @@ ModelCheckerClass <- setRefClass(
       dir.create(modelPath)
       modelPath
     },
-    createIterationPath = function(iteration) {
+    createIterationModelPath = function(iteration) {
       path <- paste(modelPath, iteration, sep = '/')
       dir.create(path)
       path
     },
-    getIterationPath = function(iteration) {
+    getIterationModelPath = function(iteration) {
       path <- paste(modelPath, iteration, sep = '/')
+      path
+    },
+    createResultsPath = function() {
+      dir.create('./results')
+      resultsPath <<- paste('./results', crimeDataClass$name, sep = '/')
+      dir.create(resultsPath)
+      resultsPath <<- paste(resultsPath, modelName, sep = '/')
+      dir.create(resultsPath)
+      resultsPath
+    },
+    getIterationResultsPath = function(iteration) {
+      path <- paste(resultsPath, iteration, sep = '/')
+      path <- paste(path, 'csv', sep = '.')
       path
     }
   )
