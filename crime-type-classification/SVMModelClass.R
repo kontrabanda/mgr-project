@@ -5,7 +5,8 @@ SVMModelClass <- setRefClass(
   Class="SVMModelClass",
   fields=list(
     modelFile = "character",
-    modelName="character"
+    modelName="character",
+    svmModel="liquidSVM"
   ),
   methods = list(
     initialize = function(path = './temp', categories = NULL) {
@@ -13,11 +14,11 @@ SVMModelClass <- setRefClass(
       modelName <<- 'svmModelClass'
     },
     trainModel = function(trainData) {
-      svmModel <- mcSVM(label~., trainData, threads=-1, partition_choice=6, predict.prob = T)
-      save(svmModel, file = modelFile)
+      svmModel <<- mcSVM(label~., trainData, threads=-1, partition_choice=6, predict.prob = T)
+      #save(svmModel, file = modelFile)
     },
     predictLabels = function(testData) {
-      load(modelFile)
+      #load(modelFile)
       pred <- predict(svmModel, testData)
       names(pred) <- gsub("vsOthers", "", names(pred))
       pred

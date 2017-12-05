@@ -45,24 +45,24 @@ timeLoggingClass$stop()
 source(file="SVMModelClass.R")
 timeLoggingClass$start()
 checker <- CheckerWithResultSaving(bialystokCrimeDataClass, SVMModelClass)
-results3 <- checker$crossValidation(sets = 1:1)
+results3 <- checker$crossValidation(sets = 6:10)
+results3 <- checker$getResults()
 
 ratingClass <- RatingClass(bialystokCrimeDataClass)
 auc3 <- ratingClass$getAvreageAUC(results3)
 timeLoggingClass$stop()
 ######################################################
 
+##################### kNN ###########################
+source(file="kNNModelClass.R")
+timeLoggingClass$start()
+checker <- CheckerWithResultSaving(bialystokCrimeDataClass, kNNModelClass)
+results4 <- checker$crossValidation()
+results4 <- checker$getResults()
 
-data <- bialystokCrimeDataClass$getData()
-trainData <- data[1:1000, ]
-testData <- data[1:1000, 1:3]
-source(file="SVMModelClass.R")
-svmModel <- SVMModelClass()
-svmModel$trainModel(trainData)
-res1 <- svmModel$predictLabels(testData)
-
-
-
-
+ratingClass <- RatingClass(bialystokCrimeDataClass)
+auc4 <- ratingClass$getAvreageAUC(results4)
+timeLoggingClass$stop()
+######################################################
 
 

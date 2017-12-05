@@ -33,8 +33,10 @@ CheckerWithResultSaving <- setRefClass(
     },
     crossValidation = function(sets = 1:foldsCount) {
       for(i in sets) {
-        trainingSingle(i)
-        testingSingle(i)
+        iterationPath <- createIterationModelPath(i)
+        classificationModel <- ClassificationModel(iterationPath, crimeDataClass$getCategoriesNames())  
+        trainingSingle(classificationModel, i)
+        testingSingle(classificationModel, i)
       }
       
       results <- getResults(sets)
@@ -52,22 +54,18 @@ CheckerWithResultSaving <- setRefClass(
       result <- read.csv(getIterationResultsPath(i))
       result
     },
-    trainingSingle = function(i) {
+    trainingSingle = function(classificationModel, i) {
       timeLoggingClass$start()
       cat(sprintf('Training %s iteration. Start time: %s \n', i, format(Sys.time(),usetz = TRUE)))
-      iterationPath <- createIterationModelPath(i)
       train <- data[folds != i, ]
-      classificationModel <- ClassificationModel(iterationPath, crimeDataClass$getCategoriesNames())  
       classificationModel$trainModel(train)
       timeLoggingClass$stop()
     },
-    testingSingle = function(i) {
+    testingSingle = function(classificationModel, i) {
       timeLoggingClass$start()
       cat(sprintf('Testing %s iteration. Start time: %s \n', i, format(Sys.time(),usetz = TRUE)))
-      iterationPath <- getIterationModelPath(i)
       test <- data[folds == i, ]
       testWithoutLabels <- test[, -which(names(test) == "label")]
-      classificationModel <- ClassificationModel(iterationPath, crimeDataClass$getCategoriesNames())  
       results <- classificationModel$predictLabels(testWithoutLabels)
       write.csv(results, file = getIterationResultsPath(i))
       timeLoggingClass$stop()
