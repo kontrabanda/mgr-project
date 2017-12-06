@@ -65,4 +65,13 @@ auc4 <- ratingClass$getAvreageAUC(results4)
 timeLoggingClass$stop()
 ######################################################
 
+##################### random forest ###########################
+source(file="RandomForestModelClass.R")
+timeLoggingClass$start()
+checker <- CheckerWithResultSaving(bialystokCrimeDataClass, RandomForestModelClass)
+results5 <- checker$crossValidation()
 
+ratingClass <- RatingClass(bialystokCrimeDataClass)
+auc5 <- ratingClass$getAvreageAUC(results5)
+timeLoggingClass$stop()
+######################################################
