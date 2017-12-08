@@ -1,20 +1,3 @@
-source(file="Util.R")
-
-#LOGISTIC REGRESSION
-checkClassifier(bialystokCrimeDataClass, LogisticRegressionModelClass)
-
-#BAYES
-checkClassifier(bialystokCrimeDataClass, NaiveBayesModelClass)
-
-#kNN
-checkClassifier(bialystokCrimeDataClass, kNNModelClass)
-
-#RANDOM FOREST
-checkClassifier(bialystokCrimeDataClass, RandomForestModelClass)
-
-#SVM
-checkClassifier(bialystokCrimeDataClass, SVMModelClass)
-
 library(raster)
 library(sp)
 
@@ -30,5 +13,3 @@ projection(crime) = projection(boston)
 crimeBoston <- intersect(crime, onlyBoston)
 crimeBostonDF <- data.frame(crimeBoston)
 write.csv(crimeBostonDF, file = "../../data/usa/crimes/crime_only_boston.csv")
-
-

@@ -20,7 +20,7 @@ CheckerWithResultSaving <- setRefClass(
       set.seed(123)
       crimeDataClass <<- crimeDataClass
       ClassificationModel <<- ClassificationModel
-      classificationModel <- ClassificationModel()
+      classificationModel <- ClassificationModel(categories = crimeDataClass$getCategoriesNames())
       modelName <<- classificationModel$modelName
       modelPath <<- createModelPath()
       resultsPath <<- createResultsPath()
@@ -55,6 +55,7 @@ CheckerWithResultSaving <- setRefClass(
       result
     },
     trainingSingle = function(classificationModel, i) {
+      timeLoggingClass <- TimeLoggingClass()
       timeLoggingClass$start()
       cat(sprintf('Training %s iteration. Start time: %s \n', i, format(Sys.time(),usetz = TRUE)))
       train <- data[folds != i, ]
@@ -62,6 +63,7 @@ CheckerWithResultSaving <- setRefClass(
       timeLoggingClass$stop()
     },
     testingSingle = function(classificationModel, i) {
+      timeLoggingClass <- TimeLoggingClass()
       timeLoggingClass$start()
       cat(sprintf('Testing %s iteration. Start time: %s \n', i, format(Sys.time(),usetz = TRUE)))
       test <- data[folds == i, ]
