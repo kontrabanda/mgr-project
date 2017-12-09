@@ -1,4 +1,6 @@
 source(file="BialystokCrimeDataClass.R")
+source(file="BostonCrimeDataClass.R")
+
 source(file="ModelCheckerClass.R")
 source(file="RatingClass.R")
 source(file="TimeLoggingClass.R")
@@ -10,15 +12,13 @@ source(file="kNNModelClass.R")
 source(file="RandomForestModelClass.R")
 source(file="SVMModelClass.R")
 
-bialystokCrimeDataClass <- BialystokCrimeDataClass()
-
 checkClassifier <- function(data, Classifier) {
   timeLoggingClass <- TimeLoggingClass()
   timeLoggingClass$start()
   modelChekcerClass <- CheckerWithResultSaving(data, Classifier)
   results <- modelChekcerClass$crossValidation()
   
-  ratingClass <- RatingClass(bialystokCrimeDataClass)
+  ratingClass <- RatingClass(data)
   auc <- ratingClass$getAvreageAUC(results)
   timeLoggingClass$stop()
   auc

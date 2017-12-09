@@ -1,34 +1,29 @@
 source(file="Util.R")
 
+#### Białystok
+bialystokCrimeDataClass <- BialystokCrimeDataClass()
+
 #LOGISTIC REGRESSION
-checkClassifier(bialystokCrimeDataClass, LogisticRegressionModelClass)
+aucLogisticRegressionBialystok <- checkClassifier(bialystokCrimeDataClass, LogisticRegressionModelClass)
 
 #BAYES
-checkClassifier(bialystokCrimeDataClass, NaiveBayesModelClass)
+aucBayesBialystok <- checkClassifier(bialystokCrimeDataClass, NaiveBayesModelClass)
 
 #kNN
-checkClassifier(bialystokCrimeDataClass, kNNModelClass)
+aucKNNBialystok <- checkClassifier(bialystokCrimeDataClass, kNNModelClass)
 
 #RANDOM FOREST
-checkClassifier(bialystokCrimeDataClass, RandomForestModelClass)
+aucRandomForestBialystok <- checkClassifier(bialystokCrimeDataClass, RandomForestModelClass)
 
 #SVM
-checkClassifier(bialystokCrimeDataClass, SVMModelClass)
+aucSVMBialystok <- checkClassifier(bialystokCrimeDataClass, SVMModelClass)
 
-library(raster)
-library(sp)
 
-boston <- shapefile("../../data/usa/boundries/boston/Bos_neighborhoods.shp")
-boston <- spTransform(boston, CRS("+init=epsg:4326"))
-onlyBoston <- aggregate(boston)
+#### Boston
+bostonCrimeDataClass <- BostonCrimeDataClass()
 
-crime <- read.csv("../../data/usa/crimes/crime_boston.csv")
-crime <- crime[!is.na(crime$Lat)&!is.na(crime$Long), ]
-coordinates(crime) =~ Long+Lat
-projection(crime) = projection(boston)
+#BAYES
+aucBayesBoston <- checkClassifier(bostonCrimeDataClass, NaiveBayesModelClass)
 
-crimeBoston <- intersect(crime, onlyBoston)
-crimeBostonDF <- data.frame(crimeBoston)
-write.csv(crimeBostonDF, file = "../../data/usa/crimes/crime_only_boston.csv")
 
 
