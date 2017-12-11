@@ -2,6 +2,7 @@ library(caret)
 source(file="ClassificationModelClass.R")
 source(file="DataClass.R")
 source(file="TimeLoggingClass.R")
+source(file="TimeLoggingWithSaving.R")
 
 CheckerWithResultSaving <- setRefClass(
   Class="CheckerWithResultSaving",
@@ -32,13 +33,24 @@ CheckerWithResultSaving <- setRefClass(
       folds <<- createFolds(factor(data$label), k = k, list = FALSE)
     },
     crossValidation = function(sets = 1:foldsCount) {
+      trainTimeLogger <- TimeLoggingWithSaving('Train', length(sets))
+      testTimeLogger <- TimeLoggingWithSaving('Test', length(sets))
+      
       for(i in sets) {
         iterationPath <- createIterationModelPath(i)
-        classificationModel <- ClassificationModel(iterationPath, crimeDataClass$getCategoriesNames())  
+        classificationModel <- ClassificationModel(iterationPath, crimeDataClass$getCategoriesNames())
+        
+        trainTimeLogger$start(i)
         trainingSingle(classificationModel, i)
+        trainTimeLogger$stop(i)
+        
+        testTimeLogger$start(i)
         testingSingle(classificationModel, i)
+        testTimeLogger$stop(i)
       }
       
+      trainTimeLogger$save(resultsPath)
+      testTimeLogger$save(resultsPath)
       results <- getResults(sets)
       results
     },
@@ -55,22 +67,14 @@ CheckerWithResultSaving <- setRefClass(
       result
     },
     trainingSingle = function(classificationModel, i) {
-      timeLoggingClass <- TimeLoggingClass()
-      timeLoggingClass$start()
-      cat(sprintf('Training %s iteration. Start time: %s \n', i, format(Sys.time(),usetz = TRUE)))
       train <- data[folds != i, ]
       classificationModel$trainModel(train)
-      timeLoggingClass$stop()
     },
     testingSingle = function(classificationModel, i) {
-      timeLoggingClass <- TimeLoggingClass()
-      timeLoggingClass$start()
-      cat(sprintf('Testing %s iteration. Start time: %s \n', i, format(Sys.time(),usetz = TRUE)))
       test <- data[folds == i, ]
       testWithoutLabels <- test[, -which(names(test) == "label")]
       results <- classificationModel$predictLabels(testWithoutLabels)
       write.csv(results, file = getIterationResultsPath(i))
-      timeLoggingClass$stop()
     },
     getDataWithoutLabels = function(data) {
       data[, -which(names(data) == "label")]
