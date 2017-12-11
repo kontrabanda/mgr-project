@@ -5,15 +5,22 @@ RatingClass <- setRefClass(
   Class="RatingClass",
   fields=list(
     dataClass="DataClass",
-    filepath="character"
+    aucFilePath="character",
+    rocPlotsPath="character"
   ),
   methods = list(
     initialize = function(dataClassInput, path = './temp') {
       dataClass <<- dataClassInput
-      filepath <<- getFilePath(path)
+      aucFilePath <<- getAucFilePath(path)
+      rocPlotsPath <<- getRocPlotsPath(path)
     },
-    getFilePath = function(path) {
+    getAucFilePath = function(path) {
       paste(path, 'auc.csv', sep = '/')
+    },
+    getRocPlotsPath = function(path) {
+      dirPath <- paste(path, 'roc-plots', sep = '/')
+      dir.create(dirPath)
+      dirPath
     },
     getAvreageAUC = function(results) {
       categoriesNames <- dataClass$getCategoriesNames()
@@ -24,16 +31,26 @@ RatingClass <- setRefClass(
         category <- categoriesNames[i]
         data <- dataClass$getDataLabeledByCategory(category)
         pr <- prediction(results[, category], data$label)
-        auc <- performance(pr, measure = "auc")
+        saveRocPlot(pr, category)
+        roc <- performance(pr, measure = "auc")
         aucs[i, 'category'] <- as.character(category)
-        aucs[i, 'value'] <- auc@y.values[[1]]
+        aucs[i, 'value'] <- roc@y.values[[1]]
       }
       
       meanValue <- mean(aucs$value)
       aucs[nrow(aucs), ] <- c('mean', meanValue)
-      write.csv(aucs, file = filepath)
+      write.csv(aucs, file = aucFilePath)
       
       meanValue
+    },
+    saveRocPlot = function(pred, category) {
+      rocPerf <- performance(pred, measure = "tpr", x.measure = "fpr")
+      fileName <- paste(as.character(category), 'png', sep = '.')
+      filePath <- paste(rocPlotsPath, fileName, sep = '/')
+      png(filePath, 2000, 2000, res=300)
+      plot(rocPerf)
+      abline(a = 0, b = 1, col = 'red')
+      dev.off()
     }
   )
 )
