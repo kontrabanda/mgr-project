@@ -4,13 +4,15 @@ TimeLoggingWithSaving <- setRefClass(
   Class="TimeLoggingWithSaving",
   fields=list(
     name="character",
+    path="character",
     results="data.frame"
   ),
   methods = list(
-    initialize = function(name, iterationCount = 10) {
+    initialize = function(name, resultPath, iterationCount = 10) {
       results <<- data.frame(matrix(NA, nrow = 0, ncol = 3))
       colnames(results) <<- c('start', 'end', 'diff')
       name <<- name
+      path <<- getPath(resultPath)
     },
     start = function(i) {
       startTime <- Sys.time()
@@ -24,14 +26,16 @@ TimeLoggingWithSaving <- setRefClass(
       timeTaken <- endTime - startTime
       results[i, 'diff'] <<- format(timeTaken, usetz = TRUE)
       print(format(timeTaken, usetz = TRUE))
+      save()
       beep()
     },
-    save = function(path) {
-      write.csv(getFormatedResults(), file = getPath(path))
+    save = function() {
+      write.csv(getFormatedResults(), file = path)
     },
-    getPath = function(path) {
-      filepath <- paste(path, "time", sep = '/')
-      filepath <- paste(filepath, name, sep = '')
+    getPath = function(resultPath) {
+      fileName <- paste('time', name, sep = "")
+      fileName <- paste(format(Sys.time(), "%Y-%m-%d %H:%M:%S"), fileName, sep = "--")
+      filepath <- paste(resultPath, fileName, sep = '/')
       filepath <- paste(filepath, 'csv', sep = '.')
       filepath
     },

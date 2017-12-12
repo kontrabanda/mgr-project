@@ -33,8 +33,8 @@ CheckerWithResultSaving <- setRefClass(
       folds <<- createFolds(factor(data$label), k = k, list = FALSE)
     },
     crossValidation = function(sets = 1:foldsCount) {
-      trainTimeLogger <- TimeLoggingWithSaving('Train', length(sets))
-      testTimeLogger <- TimeLoggingWithSaving('Test', length(sets))
+      trainTimeLogger <- TimeLoggingWithSaving('Train', resultsPath, length(sets))
+      testTimeLogger <- TimeLoggingWithSaving('Test', resultsPath, length(sets))
       
       for(i in sets) {
         iterationPath <- createIterationModelPath(i)
@@ -49,8 +49,8 @@ CheckerWithResultSaving <- setRefClass(
         testTimeLogger$stop(i)
       }
       
-      trainTimeLogger$save(resultsPath)
-      testTimeLogger$save(resultsPath)
+      #trainTimeLogger$save(resultsPath)
+      #testTimeLogger$save(resultsPath)
       results <- getResults(sets)
       results
     },
