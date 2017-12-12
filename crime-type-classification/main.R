@@ -4,35 +4,35 @@ source(file="Util.R")
 bialystokCrimeDataClass <- BialystokCrimeDataClass()
 
 #LOGISTIC REGRESSION
-aucLogisticRegressionBialystok <- checkClassifier(bialystokCrimeDataClass, LogisticRegressionModelClass)
+checkClassifier(bialystokCrimeDataClass, LogisticRegressionModelClass)
 
 #BAYES
-aucBayesBialystok <- checkClassifier(bialystokCrimeDataClass, NaiveBayesModelClass)
+checkClassifier(bialystokCrimeDataClass, NaiveBayesModelClass)
 
 #kNN
-aucKNNBialystok <- checkClassifier(bialystokCrimeDataClass, kNNModelClass)
+checkClassifier(bialystokCrimeDataClass, kNNModelClass)
 
 #RANDOM FOREST
-aucRandomForestBialystok <- checkClassifier(bialystokCrimeDataClass, RandomForestModelClass)
+checkClassifier(bialystokCrimeDataClass, RandomForestModelClass)
 
 #SVM
-aucSVMBialystok <- checkClassifier(bialystokCrimeDataClass, SVMModelClass)
+checkClassifier(bialystokCrimeDataClass, SVMModelClass)
 
 
 #### Boston
 bostonCrimeDataClass <- BostonCrimeDataClass()
 
 #LOGISTIC REGRESSION
-aucLogisticRegressionBoston <- checkClassifier(bostonCrimeDataClass, LogisticRegressionModelClass)
+checkClassifier(bostonCrimeDataClass, LogisticRegressionModelClass)
 
 #BAYES
-aucBayesBoston <- checkClassifier(bostonCrimeDataClass, NaiveBayesModelClass)
+checkClassifier(bostonCrimeDataClass, NaiveBayesModelClass)
 
 #kNN
-aucKNNBoston <- checkClassifier(bostonCrimeDataClass, kNNModelClass)
+checkClassifier(bostonCrimeDataClass, kNNModelClass)
 
 #RANDOM FOREST
-aucRandomForestBoston <- checkClassifier(bostonCrimeDataClass, RandomForestModelClass)
+checkClassifier(bostonCrimeDataClass, RandomForestModelClass)
 
 #SVM
-aucSVMBoston <- checkClassifier(bostonCrimeDataClass, SVMModelClass)
+checkClassifier(bostonCrimeDataClass, SVMModelClass)

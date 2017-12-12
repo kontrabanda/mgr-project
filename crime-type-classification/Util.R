@@ -23,9 +23,7 @@ checkClassifier <- function(data, Classifier, crossValidationSets = 1:10, withRa
     ratingClass <- RatingClass(data, modelChekcerClass$resultsPath)
     auc <- ratingClass$getAvreageAUC(results)
   }
-  
   timeLoggingClass$stop()
-  auc
 }
 
 
