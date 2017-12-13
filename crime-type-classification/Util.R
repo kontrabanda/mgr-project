@@ -1,5 +1,6 @@
 source(file="BialystokCrimeDataClass.R")
 source(file="BostonCrimeDataClass.R")
+source(file="BournemouthCrimeDataClass.R")
 
 source(file="ModelCheckerClass.R")
 source(file="RatingClass.R")

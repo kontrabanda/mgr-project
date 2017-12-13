@@ -36,3 +36,8 @@ checkClassifier(bostonCrimeDataClass, RandomForestModelClass)
 
 #SVM
 checkClassifier(bostonCrimeDataClass, SVMModelClass)
+
+#### Bournemouth
+bournemouthCrimeDataClass <- BournemouthCrimeDataClass()
+data <- bournemouthCrimeDataClass$getData()
+
