@@ -37,7 +37,22 @@ checkClassifier(bostonCrimeDataClass, RandomForestModelClass)
 #SVM
 checkClassifier(bostonCrimeDataClass, SVMModelClass)
 
+
 #### Bournemouth
 bournemouthCrimeDataClass <- BournemouthCrimeDataClass()
-data <- bournemouthCrimeDataClass$getData()
+
+#LOGISTIC REGRESSION
+checkClassifier(bournemouthCrimeDataClass, LogisticRegressionModelClass)
+
+#BAYES
+checkClassifier(bournemouthCrimeDataClass, NaiveBayesModelClass)
+
+#kNN
+checkClassifier(bournemouthCrimeDataClass, kNNModelClass)
+
+#RANDOM FOREST
+checkClassifier(bournemouthCrimeDataClass, RandomForestModelClass)
+
+#SVM
+checkClassifier(bournemouthCrimeDataClass, SVMModelClass)
 
