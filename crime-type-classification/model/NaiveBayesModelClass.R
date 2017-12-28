@@ -1,5 +1,5 @@
 library(e1071)
-source(file="ClassificationModelClass.R")
+source(file="./model/ClassificationModelClass.R")
 
 NaiveBayesModelClass <- setRefClass(
   Class="NaiveBayesModelClass",

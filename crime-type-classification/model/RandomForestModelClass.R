@@ -1,5 +1,5 @@
 library(randomForest)
-source(file="ClassificationModelClass.R")
+source(file="./model/ClassificationModelClass.R")
 
 RandomForestModelClass <- setRefClass(
   Class="RandomForestModelClass",

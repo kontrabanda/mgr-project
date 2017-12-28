@@ -1,5 +1,5 @@
 library(kknn)
-source(file="ClassificationModelClass.R")
+source(file="./model/ClassificationModelClass.R")
 
 kNNModelClass <- setRefClass(
   Class="kNNModelClass",

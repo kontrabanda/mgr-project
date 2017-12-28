@@ -1,5 +1,5 @@
 library(ROCR)
-source(file="DataClass.R")
+source(file="./data/DataClass.R")
 
 RatingClass <- setRefClass(
   Class="RatingClass",

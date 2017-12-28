@@ -1,5 +1,5 @@
 library(lubridate)
-source(file="DataClass.R")
+source(file="./data/DataClass.R")
 
 BournemouthCrimeDataClass <- setRefClass(
   Class="BournemouthCrimeDataClass",

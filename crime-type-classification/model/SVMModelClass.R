@@ -1,5 +1,5 @@
 library(liquidSVM)
-source(file="ClassificationModelClass.R")
+source(file="./model/ClassificationModelClass.R")
 
 SVMModelClass <- setRefClass(
   Class="SVMModelClass",

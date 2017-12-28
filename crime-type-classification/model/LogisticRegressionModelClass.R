@@ -1,4 +1,4 @@
-source(file="ClassificationModelClass.R")
+source(file="./model/ClassificationModelClass.R")
 
 LogisticRegressionModelClass <- setRefClass(
   Class="LogisticRegressionModelClass",

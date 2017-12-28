@@ -1,7 +1,7 @@
 library(caret)
-source(file="ClassificationModelClass.R")
-source(file="DataClass.R")
-source(file="TimeLoggingClass.R")
+source(file="./model/ClassificationModelClass.R")
+source(file="./data/DataClass.R")
+source(file="./time/TimeLoggingClass.R")
 
 ModelCheckerClass <- setRefClass(
   Class="ModelCheckerClass",
