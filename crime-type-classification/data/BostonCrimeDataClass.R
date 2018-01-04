@@ -10,9 +10,12 @@ BostonCrimeDataClass <- setRefClass(
     initialize = function() {
       name <<- "boston"
       bostonData <- read.csv(file = "../../data/usa/crimes/crime_only_boston.csv")
-      data <- setNames(data.frame(matrix(ncol = 4, nrow = nrow(bostonData))), c("lat", "lng", "date", "category"))
+      data <- setNames(data.frame(matrix(ncol = 7, nrow = nrow(bostonData))), c("lat", "lng", "hour", "day", "month", "year", "category"))
       
-      data$date <- bostonData$MONTH
+      data$hour <- bostonData$HOUR
+      data$day <- bostonData$DAY_OF_WEEK
+      data$month <- bostonData$MONTH
+      data$year <- bostonData$YEAR
       data$lat <- bostonData$Lat
       data$lng <- bostonData$Long
       data$category <- bostonData$OFFENSE_CODE_GROUP
@@ -26,12 +29,17 @@ BostonCrimeDataClass <- setRefClass(
       data[data$category %in% rareCategories,]
     },
     getData = function() {
-      data <- rawData[, c("lat", "lng", "date")]
+      data <- rawData[, c("lat", "lng", "month")]
+      data$label <- rawData$category
+      data
+    },
+    getDataWithFullDate = function() {
+      data <- rawData[, c("lat", "lng", "hour", "day", "month", "year")]
       data$label <- rawData$category
       data
     },
     getDataLabeledByCategory = function(categoryName) {
-      data <- rawData[, c("lat", "lng", "date")]
+      data <- rawData[, c("lat", "lng", "month")]
       data$label <- ifelse(rawData$category==categoryName, 1, 0)
       data
     },
